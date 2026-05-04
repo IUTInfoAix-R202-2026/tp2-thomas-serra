@@ -54,7 +54,6 @@ class ProprieteSimpleTest {
         .isEqualTo(1024);
   }
 
-  @Disabled("Retire cette annotation pour activer le test")
   @Test
   @Order(3)
   void testCreerProprieteAfficheLeToString() {
@@ -62,7 +61,6 @@ class ProprieteSimpleTest {
     verify(out).println("anIntProperty = IntegerProperty [value: 1024]");
   }
 
-  @Disabled("Retire cette annotation pour activer le test")
   @Test
   @Order(4)
   void testCreerProprieteAfficheGet() {
@@ -70,7 +68,6 @@ class ProprieteSimpleTest {
     verify(out).println("anIntProperty.get() = 1024");
   }
 
-  @Disabled("Retire cette annotation pour activer le test")
   @Test
   @Order(5)
   void testCreerProprieteAfficheGetValue() {
@@ -80,7 +77,6 @@ class ProprieteSimpleTest {
 
   // --- ajouterEtRetirerInvalidationListener() ---
 
-  @Disabled("Retire cette annotation pour activer le test")
   @Test
   @Order(6)
   void testInvalidationListenerEstDeclenche() {
@@ -89,7 +85,6 @@ class ProprieteSimpleTest {
     verify(out).println("The observable has been invalidated.");
   }
 
-  @Disabled("Retire cette annotation pour activer le test")
   @Test
   @Order(7)
   void testInvalidationListenerPasDeclencheSiMemeValeur() {
@@ -105,7 +100,6 @@ class ProprieteSimpleTest {
     verify(out).println("The observable has been invalidated.");
   }
 
-  @Disabled("Retire cette annotation pour activer le test")
   @Test
   @Order(8)
   void testInvalidationListenerEstParesseux() {
@@ -119,7 +113,6 @@ class ProprieteSimpleTest {
     // fois
   }
 
-  @Disabled("Retire cette annotation pour activer le test")
   @Test
   @Order(9)
   void testInvalidationListenerRetireFonctionne() {
