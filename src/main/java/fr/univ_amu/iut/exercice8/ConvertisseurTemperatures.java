@@ -1,6 +1,14 @@
 package fr.univ_amu.iut.exercice8;
 
 import javafx.application.Application;
+import javafx.beans.binding.Bindings;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.converter.NumberStringConverter;
 
@@ -25,30 +33,68 @@ public class ConvertisseurTemperatures extends Application {
 
   @Override
   public void start(Stage primaryStage) {
-    // TODO exercice 8 : construire le convertisseur de températures.
-    //
-    // 1. Créer le panneau Celsius (VBox) :
-    //    - Label "°C" (style bold, 16px)
-    //    - Slider vertical [0, 100], valeur initiale 0, id "slider-celsius"
-    //    - TextField, id "tf-celsius", maxWidth 50
-    //
-    // 2. Créer le panneau Fahrenheit (VBox) :
-    //    - Label "°F" (style bold, 16px)
-    //    - Slider vertical [0, 212], valeur initiale 32, id "slider-fahrenheit"
-    //    - TextField, id "tf-fahrenheit", maxWidth 50
-    //
-    // 3. Ajouter un ChangeListener sur le slider Celsius :
-    //    fahrenheit = celsius * 9/5 + 32
-    //    (utiliser un flag "updating" pour éviter les boucles infinies)
-    //
-    // 4. Ajouter un ChangeListener sur le slider Fahrenheit :
-    //    celsius = (fahrenheit - 32) * 5/9
-    //
-    // 5. Lier chaque TextField à son slider via
-    //    Bindings.bindBidirectional(tf.textProperty(), slider.valueProperty(),
-    //        new NumberStringConverter())
-    //
-    // 6. Composer les panneaux dans un HBox, créer la Scene, afficher.
+    Label labelCelsius = new Label("°C");
+    labelCelsius.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;");
+    Slider sliderCelsius = new Slider(0, 100, 0);
+    sliderCelsius.setOrientation(javafx.geometry.Orientation.VERTICAL);
+    sliderCelsius.setId("slider-celsius");
+    TextField tfCelsius = new TextField("0");
+    tfCelsius.setId("tf-celsius");
+    tfCelsius.setMaxWidth(50);
+
+    VBox vboxCelsius = new VBox(10, labelCelsius, sliderCelsius, tfCelsius);
+    vboxCelsius.setAlignment(Pos.CENTER);
+
+    Label labelFahrenheit = new Label("°F");
+    labelFahrenheit.setStyle("-fx-font-weight: bold; -fx-font-size: 16px;");
+    Slider sliderFahrenheit = new Slider(0, 212, 32);
+    sliderFahrenheit.setOrientation(javafx.geometry.Orientation.VERTICAL);
+    sliderFahrenheit.setId("slider-fahrenheit");
+    TextField tfFahrenheit = new TextField("32");
+    tfFahrenheit.setId("tf-fahrenheit");
+    tfFahrenheit.setMaxWidth(50);
+
+    VBox vboxFahrenheit = new VBox(10, labelFahrenheit, sliderFahrenheit, tfFahrenheit);
+    vboxFahrenheit.setAlignment(Pos.CENTER);
+
+    sliderCelsius
+        .valueProperty()
+        .addListener(
+            (obs, oldValue, newValue) -> {
+              if (updating) {
+                return;
+              }
+              updating = true;
+              double celsius = newValue.doubleValue();
+              double fahrenheit = celsius * 9 / 5 + 32;
+              sliderFahrenheit.setValue(fahrenheit);
+              updating = false;
+            });
+
+    sliderFahrenheit
+        .valueProperty()
+        .addListener(
+            (obs, oldValue, newValue) -> {
+              if (updating) {
+                return;
+              }
+              updating = true;
+              double fahrenheit = newValue.doubleValue();
+              double celsius = (fahrenheit - 32) * 5 / 9;
+              sliderCelsius.setValue(celsius);
+              updating = false;
+            });
+
+    Bindings.bindBidirectional(
+        tfCelsius.textProperty(), sliderCelsius.valueProperty(), new NumberStringConverter());
+    Bindings.bindBidirectional(
+        tfFahrenheit.textProperty(), sliderFahrenheit.valueProperty(), new NumberStringConverter());
+
+    HBox root = new HBox(20, vboxCelsius, vboxFahrenheit);
+    root.setAlignment(Pos.CENTER);
+    Scene scene = new Scene(root);
+    primaryStage.setScene(scene);
+    primaryStage.show();
   }
 
   public static void main(String[] args) {
